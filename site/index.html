@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>KeyDetector — Free real-time musical key detector plugin (AU / VST3)</title>
+<meta name="description" content="KeyDetector is a free, open-source real-time musical key detector plugin (AU / VST3) for Logic Pro, Ableton Live, FL Studio, Cubase, Studio One, Bitwig and Reaper." />
+<meta property="og:title" content="KeyDetector — free real-time key detector plugin" />
+<meta property="og:description" content="See the musical key of any track, live, inside your DAW. Free & open source. AU / VST3 for macOS and Windows." />
+<meta property="og:type" content="website" />
+<style>
+  :root {
+    --bg: #16161a;
+    --panel: #1e1e22;
+    --panel-2: #26262c;
+    --border: #33333b;
+    --text: #ececf0;
+    --muted: #a0a0ab;
+    --accent: #3ddc84;
+    --accent-dim: #2fae67;
+    --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 24px; }
+  section { padding: 72px 0; }
+
+  /* Hero */
+  header.hero {
+    text-align: center;
+    padding: 96px 0 72px;
+    background:
+      radial-gradient(1000px 500px at 50% -10%, rgba(61,220,132,0.12), transparent 70%),
+      var(--bg);
+    border-bottom: 1px solid var(--border);
+  }
+  .badge {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--accent);
+    border: 1px solid var(--accent-dim);
+    border-radius: 999px;
+    padding: 4px 14px;
+    margin-bottom: 24px;
+    letter-spacing: 0.02em;
+  }
+  h1 {
+    font-size: clamp(38px, 7vw, 66px);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+  }
+  h1 .em { color: var(--accent); }
+  .tagline {
+    font-size: clamp(17px, 2.5vw, 21px);
+    color: var(--muted);
+    max-width: 640px;
+    margin: 22px auto 0;
+  }
+
+  /* Buttons */
+  .cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-top: 38px; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-size: 16px; font-weight: 600;
+    padding: 14px 24px; border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--panel-2); color: var(--text);
+    transition: transform .12s ease, border-color .12s ease, background .12s ease;
+  }
+  .btn:hover { text-decoration: none; transform: translateY(-2px); border-color: var(--accent-dim); }
+  .btn.primary { background: var(--accent); color: #0c1a10; border-color: var(--accent); }
+  .btn.primary:hover { background: #4ae690; }
+  .btn small { display: block; font-weight: 400; font-size: 12px; opacity: .8; }
+  .btn .os { font-size: 22px; line-height: 1; }
+  .free-note { margin-top: 16px; font-size: 13px; color: var(--muted); }
+
+  /* Plugin mock */
+  .mock {
+    margin: 56px auto 0;
+    width: 300px; max-width: 90%;
+    background: #1e1e1e;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 30px 24px 22px;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6);
+  }
+  .mock .key { font-size: 46px; font-weight: 800; text-align: center; letter-spacing: -0.02em; }
+  .mock .bar { height: 16px; background: #333; border-radius: 4px; margin: 18px 0 6px; overflow: hidden; }
+  .mock .bar > span { display: block; height: 100%; width: 82%; background: var(--accent); border-radius: 4px; }
+  .mock .cap { text-align: center; font-size: 12px; color: var(--muted); }
+  .mock .reset {
+    display: block; margin: 18px auto 0; font-size: 13px; color: var(--muted);
+    border: 1px solid var(--border); border-radius: 8px; padding: 8px 18px; background: #26262c;
+  }
+
+  /* Feature grid */
+  h2 { font-size: 30px; font-weight: 700; letter-spacing: -0.02em; text-align: center; margin-bottom: 12px; }
+  .sub { text-align: center; color: var(--muted); margin-bottom: 44px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; }
+  .card {
+    background: var(--panel); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 26px;
+  }
+  .card .ic { font-size: 26px; margin-bottom: 12px; }
+  .card h3 { font-size: 18px; font-weight: 650; margin-bottom: 6px; }
+  .card p { color: var(--muted); font-size: 15px; }
+
+  /* Steps */
+  .steps { counter-reset: step; display: grid; gap: 14px; max-width: 680px; margin: 0 auto; }
+  .step { display: flex; gap: 16px; align-items: flex-start; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 22px; }
+  .step::before {
+    counter-increment: step; content: counter(step);
+    flex: 0 0 32px; height: 32px; border-radius: 50%;
+    background: var(--accent); color: #0c1a10; font-weight: 700;
+    display: grid; place-items: center; font-size: 15px;
+  }
+  .step p { margin: 0; }
+  .step strong { color: var(--text); }
+  .step span { color: var(--muted); }
+
+  /* DAWs */
+  .daws { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .daw { background: var(--panel-2); border: 1px solid var(--border); border-radius: 999px; padding: 8px 18px; font-size: 14px; color: var(--muted); }
+
+  /* alt bg */
+  .alt { background: #131317; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+  .note { max-width: 680px; margin: 0 auto; background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 10px; padding: 18px 22px; color: var(--muted); font-size: 15px; }
+  .note strong { color: var(--text); }
+
+  footer { text-align: center; padding: 48px 0; color: var(--muted); font-size: 14px; border-top: 1px solid var(--border); }
+  footer a { color: var(--muted); text-decoration: underline; }
+  footer .tm { display: block; margin-top: 14px; font-size: 12px; opacity: .7; max-width: 720px; margin-left: auto; margin-right: auto; }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="badge">Free &amp; open source · AU / VST3</span>
+    <h1>See the <span class="em">key</span> of any track,<br>live, inside your DAW.</h1>
+    <p class="tagline">KeyDetector is a free real-time musical key detector plugin for Logic Pro, Ableton Live, FL Studio, Cubase, Studio One, Bitwig &amp; Reaper. Drop it on a track, press play, read the key.</p>
+
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/dkribeiro/keydetector/releases/latest/download/KeyDetector-macOS.pkg">
+        <span class="os"></span><span>Download for macOS<small>Universal · AU + VST3</small></span>
+      </a>
+      <a class="btn" href="https://github.com/dkribeiro/keydetector/releases/latest/download/KeyDetector-Windows-Setup.exe">
+        <span class="os">⊞</span><span>Download for Windows<small>x64 · VST3</small></span>
+      </a>
+    </div>
+    <p class="free-note">No account, no cost, no nag screens. <a href="https://github.com/dkribeiro/keydetector">View the source on GitHub →</a></p>
+
+    <div class="mock" aria-hidden="true">
+      <div class="key">A minor</div>
+      <div class="bar"><span></span></div>
+      <div class="cap">confidence</div>
+      <div class="reset">Reset</div>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>Simple on purpose</h2>
+    <p class="sub">One job, done well — no clutter, no menus to learn.</p>
+    <div class="grid">
+      <div class="card"><div class="ic">⚡</div><h3>Real-time</h3><p>Detection updates as the track plays, with a confidence meter so you know how sure it is.</p></div>
+      <div class="card"><div class="ic">🎛️</div><h3>Works everywhere</h3><p>AU for Logic, VST3 for everyone else. macOS (Apple Silicon + Intel) and Windows.</p></div>
+      <div class="card"><div class="ic">🔇</div><h3>Never touches your audio</h3><p>It only listens — your signal passes through completely unchanged.</p></div>
+      <div class="card"><div class="ic">🆓</div><h3>Free &amp; open source</h3><p>AGPL-3.0. Use it, study it, improve it. No trial, no upsell.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <h2>Get going in a minute</h2>
+    <p class="sub">No configuration. Install, add, play.</p>
+    <div class="steps">
+      <div class="step"><p><strong>Download &amp; install.</strong> <span>Grab the installer above and double-click it.</span></p></div>
+      <div class="step"><p><strong>Add KeyDetector to a track.</strong> <span>Insert it like any audio effect — on one track, or your master to read the whole mix.</span></p></div>
+      <div class="step"><p><strong>Press play.</strong> <span>The detected key appears in big letters; the bar shows confidence.</span></p></div>
+      <div class="step"><p><strong>Hit Reset for a new section.</strong> <span>Clears the analysis so it can lock onto the next part.</span></p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Built for your DAW</h2>
+    <p class="sub">Tested and targeted for the major hosts.</p>
+    <div class="daws">
+      <span class="daw">Logic Pro</span>
+      <span class="daw">Ableton Live</span>
+      <span class="daw">FL Studio</span>
+      <span class="daw">Cubase</span>
+      <span class="daw">Studio One</span>
+      <span class="daw">Bitwig</span>
+      <span class="daw">Reaper</span>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="note">
+      <strong>First-launch security prompt is normal.</strong> Because KeyDetector is free and not paid-signed, macOS may say <em>“Apple could not verify…”</em> and Windows may show <em>“Windows protected your PC.”</em> It’s safe. On macOS: <strong>System Settings → Privacy &amp; Security → Open Anyway</strong>. On Windows: <strong>More info → Run anyway</strong>. See the <a href="https://github.com/dkribeiro/keydetector#-download--install-no-technical-knowledge-needed">full install guide</a>.
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>How it works</h2>
+    <p class="sub">The Krumhansl-Schmuckler key-finding algorithm, in real time.</p>
+    <div class="grid">
+      <div class="card"><h3>1 · Analyze</h3><p>A 16,384-point FFT turns each slice of audio into a spectrum.</p></div>
+      <div class="card"><h3>2 · Chroma</h3><p>Energy is folded into a 12-note histogram that builds up over time.</p></div>
+      <div class="card"><h3>3 · Match</h3><p>The histogram is compared against all 24 major &amp; minor key profiles.</p></div>
+      <div class="card"><h3>4 · Result</h3><p>The best match is your key; the bar shows how clear the winner is.</p></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a href="https://github.com/dkribeiro/keydetector">GitHub</a> ·
+    <a href="https://github.com/dkribeiro/keydetector/releases/latest">Releases</a> ·
+    <a href="https://github.com/dkribeiro/keydetector/blob/main/LICENSE">AGPL-3.0</a>
+    <p style="margin-top:14px;">Inspired by <a href="https://github.com/ifeelvoid/keyfinder">ifeelvoid/keyfinder</a>. Built with <a href="https://juce.com">JUCE</a>.</p>
+    <span class="tm">Logic Pro and Audio Units are trademarks of Apple Inc.; VST is a trademark of Steinberg Media Technologies GmbH; Ableton Live, FL Studio, Cubase, Studio One, Bitwig, and Reaper are trademarks of their respective owners. KeyDetector is an independent project and is not affiliated with, sponsored by, or endorsed by any of them.</span>
+  </div>
+</footer>
+
+</body>
+</html>
