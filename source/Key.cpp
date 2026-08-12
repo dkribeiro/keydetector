@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
+// Copyright (c) 2026 dkribeiro
+
 #include "Key.h"
 
 juce::String keyToString (const Key& key)
