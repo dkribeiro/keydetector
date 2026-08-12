@@ -17,6 +17,39 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(JUCE)
 
+juce_add_plugin(KeyDetector
+  PRODUCT_NAME "KeyDetector"
+  COMPANY_NAME "KeyDetector"
+  BUNDLE_ID "com.keydetector.keydetector"
+  PLUGIN_MANUFACTURER_CODE Kdet
+  PLUGIN_CODE Kdt1
+  FORMATS AU VST3
+  IS_SYNTH FALSE
+  NEEDS_MIDI_INPUT FALSE
+  NEEDS_MIDI_OUTPUT FALSE
+  COPY_PLUGIN_AFTER_BUILD TRUE
+)
+
+target_sources(KeyDetector PRIVATE
+  source/PluginProcessor.cpp
+  source/Key.cpp
+  source/KeyProfiles.cpp
+  source/KeyAnalyzer.cpp
+)
+
+target_compile_definitions(KeyDetector PUBLIC
+  JUCE_WEB_BROWSER=0
+  JUCE_USE_CURL=0
+  JUCE_VST3_CAN_REPLACE_VST2=0
+)
+
+target_link_libraries(KeyDetector PRIVATE
+  juce::juce_audio_utils
+  juce::juce_dsp
+  juce::juce_recommended_config_flags
+  juce::juce_recommended_warning_flags
+)
+
 option(KEYDETECTOR_BUILD_TESTS "Build unit tests" ON)
 if(KEYDETECTOR_BUILD_TESTS)
   enable_testing()
