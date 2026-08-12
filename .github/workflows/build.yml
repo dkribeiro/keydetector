@@ -81,6 +81,6 @@ jobs:
           name: KeyDetector ${{ github.ref_name }}
           generate_release_notes: true
           files: |
-            dist/KeyDetector-macOS.pkg
-            dist/KeyDetector-Windows-Setup.exe
+            dist/**/*.pkg
+            dist/**/*.exe
           fail_on_unmatched_files: false
