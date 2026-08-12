@@ -1,2 +1,4 @@
 build/
 .DS_Store
+KeyDetector-macOS.pkg
+packaging/windows/Output/
