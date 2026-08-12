@@ -1,4 +1,5 @@
 #include "PluginProcessor.h"
+#include "PluginEditor.h"
 
 KeyDetectorProcessor::KeyDetectorProcessor()
     : juce::AudioProcessor (BusesProperties()
@@ -69,7 +70,7 @@ KeyAnalyzer::Result KeyDetectorProcessor::getLatestResult() const
 
 juce::AudioProcessorEditor* KeyDetectorProcessor::createEditor()
 {
-    return new juce::GenericAudioProcessorEditor (*this); // temporary; replaced in Task 4
+    return new KeyDetectorEditor (*this);
 }
 
 juce::AudioProcessor* JUCE_CALLTYPE createPluginFilter()

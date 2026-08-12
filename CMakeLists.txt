@@ -32,6 +32,7 @@ juce_add_plugin(KeyDetector
 
 target_sources(KeyDetector PRIVATE
   source/PluginProcessor.cpp
+  source/PluginEditor.cpp
   source/Key.cpp
   source/KeyProfiles.cpp
   source/KeyAnalyzer.cpp
