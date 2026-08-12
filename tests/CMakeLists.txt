@@ -7,7 +7,10 @@ FetchContent_MakeAvailable(Catch2)
 
 add_executable(KeyDetectorTests
   KeyTests.cpp
+  KeyAnalyzerTests.cpp
   ${CMAKE_SOURCE_DIR}/source/Key.cpp
+  ${CMAKE_SOURCE_DIR}/source/KeyProfiles.cpp
+  ${CMAKE_SOURCE_DIR}/source/KeyAnalyzer.cpp
 )
 
 target_include_directories(KeyDetectorTests PRIVATE ${CMAKE_SOURCE_DIR}/source)
@@ -15,6 +18,7 @@ target_include_directories(KeyDetectorTests PRIVATE ${CMAKE_SOURCE_DIR}/source)
 target_link_libraries(KeyDetectorTests PRIVATE
   Catch2::Catch2WithMain
   juce::juce_core
+  juce::juce_dsp
   juce::juce_recommended_config_flags
 )
 
