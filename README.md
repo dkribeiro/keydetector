@@ -15,10 +15,17 @@ listens.
 
 1. Go to the **[Releases page](../../releases)** and download **`KeyDetector-macOS.pkg`**.
 2. **Double-click** the downloaded file and click through **Continue → Install**.
-   - If macOS says *"cannot be opened because it is from an unidentified developer,"*
-     **right-click** the file → **Open** → **Open**, then run it again. (This happens
-     because the app is free and not paid-signed — it's safe.)
 3. **Restart** your music software (Logic, Ableton, etc.). KeyDetector is now installed.
+
+> **If macOS says *"Apple could not verify KeyDetector-macOS.pkg is free of malware"***
+> — this just means the app is free and not paid-Apple-signed. It's safe. To install it:
+> 1. On the warning, click **Done**.
+> 2. Open **System Settings → Privacy & Security**, scroll to the **Security** section,
+>    and click **Open Anyway** next to the KeyDetector message.
+> 3. Confirm with Touch ID / your password, then run the installer again.
+>
+> *Prefer the terminal? Run `xattr -dr com.apple.quarantine ~/Downloads/KeyDetector-macOS.pkg`
+> then double-click the installer.*
 
 ### 🪟 Windows
 
